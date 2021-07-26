@@ -934,9 +934,24 @@ Hardhat Network's forking functionality only works with blocks from at least spu
     filterParams: FilterParams,
     isSubscription: boolean
   ): Promise<BN> {
+    console.log(
+      `HardhatNode.newFilter(${JSON.stringify(
+        filterParams,
+        null,
+        "\t"
+      )}, ${isSubscription})`
+    );
     filterParams = await this._computeFilterParams(filterParams, true);
+    console.log(
+      `HardhatNode.newFilter(): filterParams=${JSON.stringify(
+        filterParams,
+        null,
+        "\t"
+      )}`
+    );
 
     const filterId = this._getNextFilterId();
+    console.log(`HardhatNode.newFilter(): filterId: ${filterId}`);
     this._filters.set(this._filterIdToFiltersKey(filterId), {
       id: filterId,
       type: Type.LOGS_SUBSCRIPTION,
@@ -956,6 +971,7 @@ Hardhat Network's forking functionality only works with blocks from at least spu
   }
 
   public async newBlockFilter(isSubscription: boolean): Promise<BN> {
+    console.log(`HardhatNode.newBlockFilter(${isSubscription})`);
     const block = await this.getLatestBlock();
 
     const filterId = this._getNextFilterId();
@@ -974,6 +990,7 @@ Hardhat Network's forking functionality only works with blocks from at least spu
   public async newPendingTransactionFilter(
     isSubscription: boolean
   ): Promise<BN> {
+    console.log(`HardhatNode.newPendingTransactionFilter(${isSubscription})`);
     const filterId = this._getNextFilterId();
 
     this._filters.set(this._filterIdToFiltersKey(filterId), {
@@ -1809,6 +1826,9 @@ Hardhat Network's forking functionality only works with blocks from at least spu
   }
 
   private async _notifyPendingTransaction(tx: TypedTransaction) {
+    console.log(
+      `HardhatNode._notifyPendingTransaction(${JSON.stringify(tx, null, "\t")})`
+    );
     this._filters.forEach((filter) => {
       if (filter.type === Type.PENDING_TRANSACTION_SUBSCRIPTION) {
         const hash = bufferToHex(tx.hash());
@@ -2201,6 +2221,9 @@ Hardhat Network's forking functionality only works with blocks from at least spu
   }
 
   private _emitEthEvent(filterId: BN, result: any) {
+    console.log(
+      `HardhatNode._emitEthEvent(${filterId}, ${JSON.stringify(result)})`
+    );
     this.emit("ethEvent", {
       result,
       filterId,
