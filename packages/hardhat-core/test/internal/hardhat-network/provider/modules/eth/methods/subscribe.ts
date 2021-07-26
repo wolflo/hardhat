@@ -31,10 +31,6 @@ describe("Eth module", function () {
       useProvider();
 
       describe("eth_subscribe", async function () {
-        if (name === "JSON-RPC") {
-          return;
-        }
-
         function createFilterResultsGetter(
           ethereumProvider: EthereumProvider,
           filter: string
